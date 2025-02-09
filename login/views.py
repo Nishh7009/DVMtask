@@ -1,35 +1,61 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib import messages
+from .forms import RegistrationForm, LoginForm
 
 User = get_user_model()
 
 
-def login(request):
-    return render(request, "login/index.html")
-
-
-def signup(request):
+def Login(request):
 
     if request.method == "POST":
-        username = request.POST["username"]
-        fname = request.POST["fname"]
-        lname = request.POST["lname"]
-        email = request.POST["email"]
-        pass1 = request.POST["pass1"]
-        pass2 = request.POST["pass2"]
+        form = LoginForm(request.POST)
+        if form.is_valid():
 
-        myuser = User.objects.create(
-            username=username, email=email, password=pass1)
-        myuser.first_name = fname
-        myuser.last_name = lname
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
 
-        myuser.save()
+            user = authenticate(request, username=username, password=password)
 
-        messages.success(
-            request, "Your account has been successfully created.")
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Login Successful")
+                redirect('/home')
 
-        return redirect('index')
+            else:
+                messages.error(request, "Invalid Username/Password.")
+    else:
+        form = LoginForm()
 
-    return render(request, "login/signup.html")
+    return render(request, 'login/login.html', {"form": form})
+
+
+def Register(request):
+
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+
+            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
+            fname = form.cleaned_data["fname"]
+            lname = form.cleaned_data["lname"]
+            password = form.cleaned_data["password"]
+
+            user = User.objects.create_user(username=username,
+                                            email=email,
+                                            first_name=fname,
+                                            last_name=lname,
+                                            password=password,)
+
+            messages.success(request, "Registration Successful!")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+
+    else:
+        form = RegistrationForm()
+
+    return render(request, "login/register.html", {"form": form})
