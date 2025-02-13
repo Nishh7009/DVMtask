@@ -19,6 +19,7 @@ Login Form
     {% csrf_token %}
     {{form}}
     <button type="submit">Login</button>
+    <input type="hidden" name="next" value=""{{ request.GET.next }}">
     <p>Don't have an account? Create one <a href="/login/register/">here</a></p>
 </form>
 {% endblock %}

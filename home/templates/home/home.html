@@ -15,5 +15,18 @@
   {{form}}
   <button type="submit">Search</button>
 </form>
+
+{% if entries != None %}
+  {% if entries|length == 0 %}
+  <h2>No buses available</h2>
+  {% else %}
+  <h2>Buses available</h2>
+  <ul>
+    {% for bus, trip_duration, schedule_id in entries %}
+    <li>{{ bus }} - {{ trip_duration }} - <a href="{% url 'book_bus' schedule_id%}">Book bus</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endif %}
 {% endblock %}
 </html>

@@ -60,12 +60,14 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput, label="Password", required=True)
 
-    def clean_password(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
+    next = forms.CharField(widget=forms.HiddenInput(), required=False)
 
-        if len(password) < 8:
-            raise forms.ValidationError(
-                "Password length must be at least 8 characters long.")
-
-        return password
+    # def clean_password(self):
+    #     cleaned_data = super().clean()
+    #     password = cleaned_data.get("password")
+    #
+    #     if len(password) < 8:
+    #         raise forms.ValidationError(
+    #             "Password length must be at least 8 characters long.")
+    #
+    #     return password

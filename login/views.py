@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib import messages
 from .forms import RegistrationForm, LoginForm
@@ -15,13 +14,14 @@ def Login(request):
 
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
+            next_url = request.GET.get('next', '/home/')
 
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
                 messages.success(request, "Login Successful")
-                redirect('/home')
+                return redirect(next_url)
 
             else:
                 messages.error(request, "Invalid Username/Password.")

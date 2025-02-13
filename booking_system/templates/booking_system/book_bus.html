@@ -1,0 +1,18 @@
+<form method="POST">
+  {% csrf_token %}
+  {% block content %}
+    {{ form }}
+  {% endblock %}
+  {% if formset %}
+    <div id="passenger-formset">
+      {{ formset.management_form }}
+      {% for form in formset %}
+      <div class="passenger-form">
+        {{ form.as_p }}
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <<button type="submit">submit</button>
+</form>
