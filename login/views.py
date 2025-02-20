@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model, authenticate, login
+from django.shortcuts import redirect, render
+from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib import messages
 from .forms import RegistrationForm, LoginForm
 
@@ -31,6 +31,11 @@ def Login(request):
     return render(request, 'login/login.html', {"form": form})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect("/home/")
+
+
 def Register(request):
 
     if request.method == "POST":
@@ -43,11 +48,11 @@ def Register(request):
             lname = form.cleaned_data["lname"]
             password = form.cleaned_data["password"]
 
-            user = User.objects.create_user(username=username,
-                                            email=email,
-                                            first_name=fname,
-                                            last_name=lname,
-                                            password=password,)
+            User.objects.create_user(username=username,
+                                     email=email,
+                                     first_name=fname,
+                                     last_name=lname,
+                                     password=password,)
 
             messages.success(request, "Registration Successful!")
         else:

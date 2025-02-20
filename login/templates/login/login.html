@@ -22,5 +22,7 @@ Login Form
     <input type="hidden" name="next" value=""{{ request.GET.next }}">
     <p>Don't have an account? Create one <a href="/login/register/">here</a></p>
 </form>
+{% load socialaccount %}
+<a href="{% provider_login_url 'google' process='login' %}?next={% if request.GET.next %}{{ request.GET.next }}{% else %}/home/{% endif %}">Login with Google</a>
 {% endblock %}
 </html>

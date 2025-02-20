@@ -33,7 +33,6 @@ def bookings(request):
     for booking in booking_objects:
         data = {}
         data['id'] = booking.id
-        data['status'] = booking.status
         data['start_stop'] = booking.start_stop
         data['end_stop'] = booking.end_stop
         data['departure_time'] = booking.departure_time
@@ -46,6 +45,8 @@ def bookings(request):
 
     if request.method == "POST":
         id = request.POST.get('booking_id')
+        print(id)
         booking = Booking.objects.get(pk=id)
+        print(booking)
         booking.cancel()
     return render(request, 'profile_page/booking.html', {"bookings": bookings})

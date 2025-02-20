@@ -83,7 +83,7 @@
             background-color: #28a745;
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 8px 12px; /* Adjusted padding */
             cursor: pointer;
             border-radius: 4px;
             font-size: 14px;
@@ -99,6 +99,13 @@
             font-weight: bold;
             margin-top: 20px;
         }
+
+        /* Ensure the form inside the table cell is inline */
+        td form {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -109,28 +116,6 @@
             {{ form.as_p }}
             <button type="submit">Search</button>
         </form>
-
-
-{% block content %}
-<form method="POST">
-  {% csrf_token %}
-  {{form}}
-  <button type="submit">Search</button>
-</form>
-
-{% if entries != None %}
-  {% if entries|length == 0 %}
-  <h2>No buses available</h2>
-  {% else %}
-  <h2>Buses available</h2>
-  <ul>
-    {% for bus, trip_duration, schedule_id in entries %}
-    <li>{{ bus }} - {{ trip_duration }} - <a href="{% url 'book_bus' schedule_id%}">Book bus</a></li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-{% endif %}
-{% endblock %}
         {% if entries != None %}
             {% if entries|length == 0 %}
                 <h2 class="no-buses">No buses available</h2>
@@ -152,7 +137,7 @@
                                 <td>{{ bus }}</td>
                                 <td>{{ departure_time|date:"Y-m-d H:i" }}</td>
                                 <td>{{ arrival_time|date:"Y-m-d H:i" }}</td>
-                                <td>${{ price }}</td>
+                                <td>₹{{ price }}</td>
                                 <td>
                                     <form method="POST" style="display: inline;">
                                         {% csrf_token %}
@@ -167,5 +152,4 @@
         {% endif %}
     </div>
 </body>
->>>>>>> Stashed changes
 </html>

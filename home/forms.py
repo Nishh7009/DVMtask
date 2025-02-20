@@ -1,21 +1,19 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from booking_system.models import Route, Schedule
+from booking_system.models import Stop
 
 User = get_user_model()
 
 
 class HomeForm(forms.Form):
 
-    arrival = forms.ModelChoiceField(
-        queryset=Route.objects.values_list('arrival', flat=True).distinct(),
-        empty_label='None',
-        to_field_name="arrival",)
+    start_stop = forms.ModelChoiceField(
+        queryset=Stop.objects.all(),
+        empty_label='None',)
 
-    destination = forms.ModelChoiceField(
-        queryset=Route.objects.values_list('arrival', flat=True).distinct(),
-        empty_label='None',
-        to_field_name="arrival",)
+    end_stop = forms.ModelChoiceField(
+        queryset=Stop.objects.all(),
+        empty_label='None',)
 
     date = forms.DateField(widget=forms.SelectDateWidget())
 
