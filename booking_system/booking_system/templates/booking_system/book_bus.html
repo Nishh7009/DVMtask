@@ -1,0 +1,28 @@
+<form method="POST">
+  {% csrf_token %}
+  {% block content %}
+    {{ form }}
+  {% endblock %}
+  {% if formset == None %}
+  <button type="submit" name="submit_ticket_count">submit</button>
+  {% endif %}
+</form>
+
+{% if formset != None %}
+  {% if messages %}
+      {% for message in messages %}
+          <div>{{ message }}</div>
+      {% endfor %}
+  {% endif %}
+<form method="POST">
+  {% csrf_token %}
+  {{ formset.management_form }}
+  {% block content2 %}
+    {% for form in formset %}
+    <h3>Passenger {{ forloop.counter }}</h3>
+      {{ form }}
+    {% endfor %}
+  {% endblock %}
+  <button type="submit" name="submit_passenger_details">Submit</button>
+</form>
+{% endif %}

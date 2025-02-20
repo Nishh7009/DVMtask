@@ -1,0 +1,104 @@
+{% include 'navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="container">
+            <h1>Your Bookings</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Departure Time</th>
+                            <th>Arrival Time</th>
+                            <th>Tickets</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ booking.start_stop }}</td>
+                                <td>{{ booking.end_stop }}</td>
+                                <td>{{ booking.departure_time|date:"Y-m-d H:i" }}</td>
+                                <td>{{ booking.arrival_time|date:"Y-m-d H:i" }}</td>
+                                <td>{{ booking.tickets }}</td>
+                                <td>₹{{ booking.price }}</td>
+                                <td>
+                                    {% if booking.status == "cancelled" %}
+                                        <span class="status-cancelled">Cancelled</span>
+                                    {% else %}
+                                        <span class="status-active">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if booking.status != "cancelled" %}
+                                        <button type="submit" name="booking_id" value="{{ booking.id }}">Cancel Booking</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

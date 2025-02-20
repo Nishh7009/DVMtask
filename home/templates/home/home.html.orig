@@ -1,0 +1,172 @@
+{% include 'navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, p, table, form, ul {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form input, form select, form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .book-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .book-button:hover {
+            background-color: #218838;
+        }
+
+        .no-buses {
+            text-align: center;
+            color: #dc3545;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bus Search</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Search</button>
+        </form>
+
+<<<<<<< Updated upstream
+{% block content %}
+<form method="POST">
+  {% csrf_token %}
+  {{form}}
+  <button type="submit">Search</button>
+</form>
+
+{% if entries != None %}
+  {% if entries|length == 0 %}
+  <h2>No buses available</h2>
+  {% else %}
+  <h2>Buses available</h2>
+  <ul>
+    {% for bus, trip_duration, schedule_id in entries %}
+    <li>{{ bus }} - {{ trip_duration }} - <a href="{% url 'book_bus' schedule_id%}">Book bus</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endif %}
+{% endblock %}
+=======
+        {% if entries != None %}
+            {% if entries|length == 0 %}
+                <h2 class="no-buses">No buses available</h2>
+            {% else %}
+                <h2>Buses Available</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bus</th>
+                            <th>Departure Time</th>
+                            <th>Arrival Time</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bus, schedules, departure_time, arrival_time, price in entries %}
+                            <tr>
+                                <td>{{ bus }}</td>
+                                <td>{{ departure_time|date:"Y-m-d H:i" }}</td>
+                                <td>{{ arrival_time|date:"Y-m-d H:i" }}</td>
+                                <td>${{ price }}</td>
+                                <td>
+                                    <form method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" name="book_bus" value="{{ schedules }}-{{ price }}" class="book-button">Book Bus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+>>>>>>> Stashed changes
+</html>

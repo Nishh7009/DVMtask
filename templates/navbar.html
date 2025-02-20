@@ -1,22 +1,33 @@
 <style>
-    /* Basic Navbar Styling */
+    /* Navbar Styling */
     .navbar {
-        background-color: #f8f9fa;
-        padding: 10px;
+        background-color: #ffffff;
+        padding: 10px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        width: 100%;
     }
 
     .navbar-logo img {
         height: 50px;
+        transition: transform 0.3s ease;
+    }
+
+    .navbar-logo img:hover {
+        transform: scale(1.05);
     }
 
     .navbar-links {
         list-style: none;
         display: flex;
-        gap: 15px;
+        gap: 20px;
         margin: 0;
         padding: 0;
     }
@@ -27,9 +38,16 @@
 
     .navbar-links a {
         text-decoration: none;
-        color: black;
-        font-weight: bold;
-        padding: 5px 10px;
+        color: #333;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-links a:hover {
+        background-color: #007bff;
+        color: white;
     }
 
     .search-form {
@@ -51,21 +69,71 @@
         cursor: pointer;
     }
 
-    .auth-buttons a {
-        text-decoration: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        color: white;
-        margin-left: 10px;
+    .auth-buttons {
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
 
-.btn-login {
+    .auth-buttons a {
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+
+    .btn-login {
         background-color: gray;
     }
 
-    .btn-profile {
-        background-color: green;
+    .btn-login {
+        background-color: #6c757d;
+        color: white;
     }
+
+    .btn-login:hover {
+        background-color: #5a6268;
+    }
+
+    .btn-profile {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-profile:hover {
+        background-color: #218838;
+    }
+
+    .wallet-info {
+        font-weight: 500;
+        color: #333;
+        background-color: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .navbar-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .navbar-buttons a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-buttons a:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
 </style>
 
 <nav class="navbar">
@@ -75,6 +143,7 @@
             <img src="https://indigo-gastonia-790.notion.site/image/attachment%3A664ee040-1afa-404b-b0fb-32004c018d18%3ASCR-20250129-jhgq.png?table=block&id=1886e2d9-336a-808d-a55b-dda304e3b2f8&spaceId=eef0e773-4b45-4b7d-9075-3a1d5f41eec9&width=250&userId=&cache=v2" alt="Logo">
         </a>
     </div>
+
 
     <!-- Search Form -->
     <!-- <form method="get" action="{% url 'home' %}" class="search-form"> -->
@@ -99,6 +168,22 @@
     <div class="auth-buttons">
         {% if user.is_authenticated %}
             <a href="" class="btn-profile">Profile</a>
+
+    <!-- Profile Links -->
+    <div class="navbar-buttons">
+        {% if request.path == "/profile/" or request.path == "/profile/wallet/" or request.path == "/profile/bookings/" %}
+            <a href="/profile/">Profile</a>
+            <a href="/profile/bookings">Bookings</a>
+            <a href="/profile/wallet">Wallet</a>
+        {% endif %}
+    </div>
+
+    <!-- Auth Buttons -->
+    <div class="auth-buttons">
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile_page' %}" class="btn-profile">Profile</a>
+            <div class="wallet-info">Wallet: {{ request.user.wallet }}</div>
+
         {% else %}
             <a href="/login" class="btn-login">Login</a>
         {% endif %}
