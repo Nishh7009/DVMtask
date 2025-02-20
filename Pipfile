@@ -7,7 +7,7 @@ name = "pypi"
 django = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
-django-allauth = "*"
+django-allauth = {extras = ["google"], version = "*"}
 extras = "*"
 requests = "*"
 google-auth = "*"
