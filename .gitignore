@@ -1,3 +1,4 @@
 .env.dev
 token
 requirements.txt
+data.json
