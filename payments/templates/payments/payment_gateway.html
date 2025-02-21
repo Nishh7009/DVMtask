@@ -4,22 +4,130 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
+    <title>Booking Summary</title>
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, p, form, a {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <h1>Booking Summary</h1>
-    <p>From: {{ start_stop }} To: {{ end_stop }}</p>
-    <p>Departure Time: {{ departure_time }}</p>
-    <p>Arrival Time: {{ arrival_time }}</p>
-    <p>Bus Name: {{ bus_name }}, Bus Number: {{ bus_number }}</p>
-    <h2>Passenger Details</h2>
-    {% for passenger in passengers %}
-      <h3>Passenger {{ forloop.counter }}</h3>
-        <p>Name: {{ passenger.first_name }} {{ passenger.last_name }} Age: {{ passenger.age }}</p>
-    {% endfor %}
-    <p>Total price: {{ total_price }}</p>
-    <form method="POST">
-      {% csrf_token %}
-      <button type="submit">Confirm Booking</button>   
-    </form>
-   
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .booking-summary {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .booking-summary h1 {
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .booking-summary h2 {
+            font-size: 20px;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .booking-summary p {
+            font-size: 16px;
+            margin-bottom: 0.75rem;
+            color: #555;
+        }
+
+        .passenger-details {
+            margin-top: 1rem;
+        }
+
+        .passenger-details h3 {
+            font-size: 18px;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .confirm-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+        }
+
+        .confirm-button:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            padding: 1rem;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .success-message a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .success-message a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-summary">
+        <h1>Booking Summary</h1>
+        <p><strong>From:</strong> {{ start_stop }}</p>
+        <p><strong>To:</strong> {{ end_stop }}</p>
+        <p><strong>Departure Time:</strong> {{ departure_time }}</p>
+        <p><strong>Arrival Time:</strong> {{ arrival_time }}</p>
+        <p><strong>Bus Name:</strong> {{ bus_name }}, <strong>Bus Number:</strong> {{ bus_number }}</p>
+
+        <h2>Passenger Details</h2>
+        <div class="passenger-details">
+            {% for passenger in passengers %}
+                <h3>Passenger {{ forloop.counter }}</h3>
+                <p><strong>Name:</strong> {{ passenger.first_name }} {{ passenger.last_name }}</p>
+                <p><strong>Age:</strong> {{ passenger.age }}</p>
+            {% endfor %}
+        </div>
+
+        <p><strong>Total Price:</strong> {{ total_price }}</p>
+
+        {% if not booking_confirmed %}
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="confirm-button">Confirm Booking</button>
+            </form>
+        {% else %}
+            <div class="success-message">
+                <p>Successfully booked! Go back to <a href="/home/">home</a>...</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

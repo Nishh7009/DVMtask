@@ -26,7 +26,8 @@ def payment(request):
                'departure_time': departure_time,
                'arrival_time': arrival_time,
                'passengers': passengers,
-               'total_price': total_price}
+               'total_price': total_price,
+               'booking_confirmed': False}
 
     if request.method == "POST":
         passenger_objects = []
@@ -45,7 +46,6 @@ def payment(request):
         booking.passengers.set(passenger_objects)
 
         booking.save()
-
-        return HttpResponse("Successfully Booked!")
+        context['booking_confirmed'] = True
 
     return render(request, 'payments/payment_gateway.html', context)

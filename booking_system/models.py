@@ -13,7 +13,7 @@ class Bus(models.Model):
     capacity = models.PositiveIntegerField(default=50)
 
     def __str__(self):
-        return f"{self.bus_name} Capacity: {self.capacity} Number: {self.bus_number}"
+        return f"{self.bus_name} Number: {self.bus_number}"
 
 
 class Stop(models.Model):
@@ -118,10 +118,12 @@ class Booking(models.Model):
     def save(self, *args, **kwargs):
         new = self.pk is None
         super().save(*args, **kwargs)
-        if not new:
+        if new:
             for schedule in self.schedules.all():
                 schedule.available_capacity -= self.passengers.count()
                 schedule.save()
+            self.user.wallet -= self.total_price
+            self.user.save()
 
     def cancel(self):
         if self.status != "cancelled":
