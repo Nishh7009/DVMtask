@@ -25,34 +25,14 @@ class Stop(models.Model):
 
 
 class RouteSegment(models.Model):
-    # route = models.ForeignKey(
-    #     'Route', on_delete=models.CASCADE, related_name='segment_route')
     start_stop = models.ForeignKey(
         'Stop', on_delete=models.CASCADE, related_name='start_of_segment')
     end_stop = models.ForeignKey(
         'Stop', on_delete=models.CASCADE, related_name='end_of_segment')
-    # order = models.PositiveIntegerField()
-
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(
-    #             fields=['route', 'order'], name="unique order per route."),
-    #         models.UniqueConstraint(fields=[
-    #                                 'route', 'start_stop'], name="unique start stop for every segment in a route."),
-    #         models.UniqueConstraint(
-    #             fields=['route', 'end_stop'], name="unique end stop for every segment in a route."),
-    #     ]
 
     def __str__(self):
         return f"{self.start_stop} to {self.end_stop}."
 
-
-# class Route(models.Model):
-#     route_name = models.CharField(max_length=250)
-#
-#     def __str__(self):
-#         return f"{self.route_name}"
-#
 
 class Schedule(models.Model):
     bus = models.ForeignKey(
@@ -65,14 +45,6 @@ class Schedule(models.Model):
     price = models.PositiveIntegerField(blank=True, default=500)
     next_schedule = models.ForeignKey(
         'self', null=True, on_delete=models.SET_NULL, blank=True)
-
-    # class Meta:
-    #     constraints = [
-    #         models.CheckConstraint(check=models.Q(
-    #             next_schedule=None) | models.Q(bus=models.F('next_schedule__bus')), name="same_bus"),
-    #         models.CheckConstraint(check=models.Q(next_schedule=None) | models.Q(
-    #             route_segment__end_stop=models.F('next_schedule__route_segment__start_stop')), name="stop_consistency"),
-    #     ]
 
     def clean(self):
         if self.next_schedule:
