@@ -25,8 +25,19 @@ For detailed requirements, refer to the [project documentation here](https://ind
 
 ## Getting Started
 
+**Prerequisites**
+
+  Must have Docker (Optionally docker-compose).
+
 To get started with the project, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/Nishh7009/DVMtask.git
+
+2. **Initialize Docker Container**
+  ```bash
+  docker compose up --build -d
+```
+
+You should now be simply able to go to http://127.0.0.1:8000 to access the website
