@@ -37,7 +37,7 @@ To get started with the project, follow these steps:
 
 2. **Initialize Docker Container**
   ```bash
-  docker compose up --build -d
+   docker compose up --build -d
 ```
 
 You should now be simply able to go to http://127.0.0.1:8000 to access the website
