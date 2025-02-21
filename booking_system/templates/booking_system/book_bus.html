@@ -1,28 +1,145 @@
-<form method="POST">
-  {% csrf_token %}
-  {% block content %}
-    {{ form }}
-  {% endblock %}
-  {% if formset == None %}
-  <button type="submit" name="submit_ticket_count">submit</button>
-  {% endif %}
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Bus</title>
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, p, form, a {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% if formset != None %}
-  {% if messages %}
-      {% for message in messages %}
-          <div>{{ message }}</div>
-      {% endfor %}
-  {% endif %}
-<form method="POST">
-  {% csrf_token %}
-  {{ formset.management_form }}
-  {% block content2 %}
-    {% for form in formset %}
-    <h3>Passenger {{ forloop.counter }}</h3>
-      {{ form }}
-    {% endfor %}
-  {% endblock %}
-  <button type="submit" name="submit_passenger_details">Submit</button>
-</form>
-{% endif %}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .alert {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .passenger-form {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .passenger-form h3 {
+            font-size: 18px;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book Bus</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            {% block content %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+            {% endblock %}
+            {% if formset == None %}
+                <button type="submit" name="submit_ticket_count" class="submit-button">Submit</button>
+            {% endif %}
+        </form>
+
+        {% if formset != None %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                {% block content2 %}
+                    {% for form in formset %}
+                        <div class="passenger-form">
+                            <h3>Passenger {{ forloop.counter }}</h3>
+                            <div class="form-group">
+                                {{ form.as_p }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+                <button type="submit" name="submit_passenger_details" class="submit-button">Submit</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
