@@ -45,8 +45,6 @@ def bookings(request):
 
     if request.method == "POST":
         id = request.POST.get('booking_id')
-        print(id)
         booking = Booking.objects.get(pk=id)
-        print(booking)
         booking.cancel()
     return render(request, 'profile_page/booking.html', {"bookings": bookings})
