@@ -9,10 +9,8 @@ ENV PYTHONUNBUFFERED=1
 
 # install dependencies
 RUN pip install --upgrade pip
-RUN pip install pipenv
-RUN pipenv --python /usr/local/bin/python3.12
+COPY requirements.txt /bus_booking/
+RUN pip install --no-cache-dir -r requirements.txt
 
 # copy project
 COPY . /bus_booking
-
-RUN pipenv install --system --deploy

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Schedule</title>
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, p, form, a {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .add-schedule-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .messages .alert {
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .messages .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .messages .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="add-schedule-container">
+        <h1>Add New Schedule</h1>
+
+        <!-- Display Messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Add Schedule Form -->
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_route_segment">Route Segment</label>
+                {{ form.route_segment }}
+            </div>
+            <div class="form-group">
+                <label for="id_departure_time">Departure Time</label>
+                {{ form.departure_time }}
+            </div>
+            <div class="form-group">
+                <label for="id_arrival_time">Arrival Time</label>
+                {{ form.arrival_time }}
+            </div>
+            <div class="form-group">
+                <label for="id_price">Price</label>
+                {{ form.price }}
+            </div>
+            <div class="form-group">
+                <label for="id_available_capacity">Available Capacity</label>
+                {{ form.available_capacity }}
+            </div>
+            <div class="form-group">
+                <label for="id_next_schedule">Next Schedule</label>
+                {{ form.next_schedule }}
+            </div>
+            <button type="submit" class="submit-button">Add Schedule</button>
+        </form>
+    </div>
+</body>
+</html>

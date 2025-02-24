@@ -124,6 +124,8 @@
             <a href="/profile/">Profile</a>
             <a href="/profile/bookings">Bookings</a>
             <a href="/profile/wallet">Wallet</a>
+        {% elif request.user.admin_of is not None %}
+            <a href="/bus_admin/">Bus Admin Page</a>
         {% endif %}
     </div>
 

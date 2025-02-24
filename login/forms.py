@@ -34,7 +34,8 @@ class RegistrationForm(forms.Form):
         return cleaned_data
 
     def clean_username(self):
-        username = self.cleaned_data.get("username")
+        cleaned_data = super().clean()
+        username = cleaned_data.get("username")
 
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError(
@@ -44,7 +45,8 @@ class RegistrationForm(forms.Form):
         return username
 
     def clean_email(self):
-        email = self.cleaned_data.get("email")
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
 
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError(

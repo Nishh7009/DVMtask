@@ -127,18 +127,16 @@
                             <th>Bus</th>
                             <th>Departure Time</th>
                             <th>Arrival Time</th>
-                            <th>Capacity</th>
                             <th>Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for bus, schedules, departure_time, arrival_time, price, available_capacity in entries %}
+                        {% for bus, schedules, departure_time, arrival_time, price in entries %}
                             <tr>
                                 <td>{{ bus }}</td>
                                 <td>{{ departure_time|date:"Y-m-d H:i" }}</td>
                                 <td>{{ arrival_time|date:"Y-m-d H:i" }}</td>
-                                <td>{{ available_capacity }}</td>
                                 <td>₹{{ price }}</td>
                                 <td>
                                     <form method="POST" style="display: inline;">

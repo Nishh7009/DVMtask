@@ -47,17 +47,3 @@ def book_bus(request):
         formset = None
 
     return render(request, 'booking_system/book_bus.html', {"form": form, "formset": formset})
-
-
-def passenger_details(request, schedule_id, count):
-    count = int(count)
-    deatil_formset = formset_factory(PassengerDetailForm, extra=count)
-    if request.method == "POST":
-        formset = deatil_formset(request.POST)
-        if formset.is_valid():
-            passenger = [form.cleaned_data for form in formset]
-            return HttpResponse(f"{passenger}")
-    else:
-        formset = deatil_formset()
-
-    return render(request, 'booking_system/passenger_details.html', {'formset': formset})

@@ -99,6 +99,13 @@
     </style>
 </head>
 <body>
+    <div class="success-message">
+      {% if messages %}
+        {% for message in messages%}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
     <div class="booking-summary">
         <h1>Booking Summary</h1>
         <p><strong>From:</strong> {{ start_stop }}</p>
@@ -125,7 +132,7 @@
             </form>
         {% else %}
             <div class="success-message">
-                <p>Successfully booked! Go back to <a href="/home/">home</a>...</p>
+                <p>Successfully booked! Return to <a href="/home/">home</a>...</p>
             </div>
         {% endif %}
     </div>

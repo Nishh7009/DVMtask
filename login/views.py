@@ -55,7 +55,6 @@ def Register(request):
                                      password=password,)
 
             messages.success(request, "Registration Successful!")
-            return redirect("home")
         else:
             for field, errors in form.errors.items():
                 for error in errors:

@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
 from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('home/', include('home.urls')),
@@ -26,9 +26,10 @@ urlpatterns = [
     path('book_bus/', include('booking_system.urls')),
     path('profile/', include('profile_page.urls')),
     path('accounts/', include('allauth.urls')),
-    path('payments/', include('payments.urls'))
+    path('payments/', include('payments.urls')),
+    path('bus_admin/', include('bus_admin.urls'))
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)

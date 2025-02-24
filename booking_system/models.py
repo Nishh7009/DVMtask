@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator
 from django.core.exceptions import ValidationError
@@ -13,7 +13,7 @@ class Bus(models.Model):
     capacity = models.PositiveIntegerField(default=50)
 
     def __str__(self):
-        return f"{self.bus_name} Number: {self.bus_number}"
+        return f"{self.bus_name} Capacity: {self.capacity} Number: {self.bus_number}"
 
 
 class Stop(models.Model):
@@ -45,6 +45,7 @@ class Schedule(models.Model):
     price = models.PositiveIntegerField(blank=True, default=500)
     next_schedule = models.ForeignKey(
         'self', null=True, on_delete=models.SET_NULL, blank=True)
+    is_running = models.BooleanField(default=True)
 
     def clean(self):
         if self.next_schedule:
@@ -56,7 +57,10 @@ class Schedule(models.Model):
                     {'next_schedule': "Next Schedule's start stop must be same as this Schedule's end stop."})
             if self.arrival_time.date() != self.next_schedule.departure_time.date():
                 raise ValidationError(
-                    {"next_schedule": "Next Schedule's deparure date is not the same as current schedule's arrival date."})
+                    {"next_schedule": "Next Schedule's departure date is not the same as current schedule's arrival date."})
+            if self.available_capacity > self.bus.capacity:
+                raise ValidationError(
+                    {"available_capacity": "Available capacity cannot be greater than maximum capaity of bus"})
 
     def __str__(self):
         return f"{self.bus.bus_name} on {self.route_segment} at {self.departure_time}"
@@ -64,7 +68,18 @@ class Schedule(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.available_capacity = self.bus.capacity
+        self.full_clean()
         super().save(*args, **kwargs)
+
+    def cancel(self):
+        self.is_running = False
+        for booking in self.bookings_schedule.all():
+            if booking.status != 'cancelled':
+                booking.cancel()
+        self.available_capacity = self.bus_capacity
+        self.save()
+        if self.next_schedule is not None and self.next_schedule.is_running:
+            self.next_schedule.cancel()
 
 
 class Booking(models.Model):
@@ -90,24 +105,24 @@ class Booking(models.Model):
     def save(self, *args, **kwargs):
         new = self.pk is None
         super().save(*args, **kwargs)
-        if new:
+        if not new:
             for schedule in self.schedules.all():
                 schedule.available_capacity -= self.passengers.count()
                 schedule.save()
-            self.user.wallet -= self.total_price
-            self.user.save()
 
+    @transaction.atomic
     def cancel(self):
         if self.status != "cancelled":
             self.status = "cancelled"
             self.save()
 
-            self.user.wallet += self.total_price
-            self.user.save()
-
             for schedule in self.schedules.all():
                 schedule.available_capacity += self.passengers.count()
                 schedule.save()
+
+            payment = self.payments_bookings.first()
+            if payment and not payment.refunded:
+                payment.refund()
 
 
 class Passenger(models.Model):
@@ -129,12 +144,14 @@ class Payment(models.Model):
     refunded = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @transaction.atomic
     def save(self, *args, **kwargs):
         if not self.refunded:
             self.user.wallet -= self.amount
             self.user.save()
         super(self, *args, **kwargs)
 
+    @transaction.atomic
     def refund(self):
         if not self.refunded:
             self.refunded = True

@@ -1,8 +1,11 @@
-from django.shortcuts import render, HttpResponse
-from booking_system.models import Schedule, Passenger, Booking
+from django.db import transaction
+from django.contrib import messages
+from django.shortcuts import render
+from booking_system.models import Schedule, Passenger, Booking, Payment
 # Create your views here.
 
 
+@transaction.atomic
 def payment(request):
     booking_data = request.session['booking_data']
     schedule_ids = booking_data['schedule_ids']
@@ -30,22 +33,29 @@ def payment(request):
                'booking_confirmed': False}
 
     if request.method == "POST":
-        passenger_objects = []
-        schedule_objects = list(Schedule.objects.filter(pk__in=schedule_ids))
+        try:
+            passenger_objects = []
+            schedule_objects = list(
+                Schedule.objects.filter(pk__in=schedule_ids))
 
-        for passenger in passengers:
-            passenger_object = Passenger.objects.create(**passenger)
-            passenger_objects.append(passenger_object)
+            for passenger in passengers:
+                passenger_object = Passenger.objects.create(**passenger)
+                passenger_objects.append(passenger_object)
 
-        booking = Booking.objects.create(
-            user=request.user, start_stop=start_stop, end_stop=end_stop, departure_time=departure_time, arrival_time=arrival_time, status="confirmed", total_price=total_price)
+            booking = Booking.objects.create(
+                user=request.user, start_stop=start_stop, end_stop=end_stop, departure_time=departure_time, arrival_time=arrival_time, status="confirmed", total_price=total_price)
 
-        booking.save()
+            booking.schedules.set(schedule_objects)
+            booking.passengers.set(passenger_objects)
 
-        booking.schedules.set(schedule_objects)
-        booking.passengers.set(passenger_objects)
+            payment = Payment.objects.create(
+                user=request.user, booking=booking, amount=total_price)
 
-        booking.save()
-        context['booking_confirmed'] = True
+            context['booking_confirmed'] = True
+            messages.success(
+                request, "Booking and payment completed successfully")
+        except Exception as e:
+            messages.error(request, f"An error occured: {str(e)}")
+            raise
 
     return render(request, 'payments/payment_gateway.html', context)
