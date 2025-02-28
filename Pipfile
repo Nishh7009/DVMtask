@@ -16,6 +16,8 @@ pyjwt = "*"
 cryptography = "*"
 gunicorn = "*"
 dotenv = "*"
+django-otp = "*"
+pyotp = "*"
 
 [dev-packages]
 

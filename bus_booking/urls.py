@@ -27,7 +27,8 @@ urlpatterns = [
     path('profile/', include('profile_page.urls')),
     path('accounts/', include('allauth.urls')),
     path('payments/', include('payments.urls')),
-    path('bus_admin/', include('bus_admin.urls'))
+    path('bus_admin/', include('bus_admin.urls')),
+    path('otp/', include('EmailOtp.urls'))
 ]
 
 if settings.DEBUG:
