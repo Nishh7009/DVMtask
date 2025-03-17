@@ -34,7 +34,9 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
 
-SITE_ID = 3
+SITE_ID = 6
+USE_TZ = True
+TIME_ZONE = "IST"
 
 INSTALLED_APPS = [
     'EmailOtp',

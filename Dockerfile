@@ -6,6 +6,7 @@ WORKDIR /bus_booking
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV TZ=IST
 
 # install dependencies
 RUN pip install --upgrade pip

@@ -15,10 +15,10 @@ For detailed requirements, refer to the [project documentation here](https://ind
 - **Google OAuth Login**: Integrated Google OAuth for user login.
 - **Database Upgrade**: Upgraded the database to support additional features.
 - **Intermediate Stops and Routes**: Added support for intermediate stops and route management.
+- **Email Notification and OTP Verification**: Email notifications and OTP-based verification on registration have been implemented.
 
 ## Goals Not Achieved (Yet)
 
-- **Email Notification and OTP Verification**: Email notifications and OTP-based verification are not yet implemented.
 - **Seat Classes**: Support for different seat classes is pending.
 - **Administrative Export**: Export functionality for administrative data is not yet available.
 - **Deployment**: The application has not been deployed to a live environment.

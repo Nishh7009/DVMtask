@@ -46,6 +46,7 @@ class Schedule(models.Model):
     next_schedule = models.ForeignKey(
         'self', null=True, on_delete=models.SET_NULL, blank=True)
     is_running = models.BooleanField(default=True)
+    is_weekly = models.BooleanField(default=False)
 
     def clean(self):
         if self.next_schedule:
@@ -69,6 +70,9 @@ class Schedule(models.Model):
         if not self.pk:
             self.available_capacity = self.bus.capacity
         self.full_clean()
+        if self.is_weekly and self.next_schedule is not None:
+            self.next_schedule.is_weekly = True
+            self.next_schedule.save()
         super().save(*args, **kwargs)
 
     def cancel(self):
@@ -96,7 +100,7 @@ class Booking(models.Model):
         'Passenger', related_name='bookings_passengers')
     booking_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[(
-        'confirmed', 'Confirmed'), ('cancelled', 'Cancelled'), ('pending', 'Pending')], default="pending")
+        'confirmed', 'Confirmed'), ('cancelled', 'Cancelled'), ('pending', 'Pending'), ('completed', 'Completed'), ('ongoing', 'Ongoing')], default="pending")
     total_price = models.PositiveIntegerField()
 
     def __str__(self):
@@ -149,7 +153,7 @@ class Payment(models.Model):
         if not self.refunded:
             self.user.wallet -= self.amount
             self.user.save()
-        super(self, *args, **kwargs)
+        super().save(*args, **kwargs)
 
     @transaction.atomic
     def refund(self):

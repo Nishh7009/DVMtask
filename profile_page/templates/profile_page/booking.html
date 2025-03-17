@@ -84,14 +84,18 @@
                                 <td>
                                     {% if booking.status == "cancelled" %}
                                         <span class="status-cancelled">Cancelled</span>
+                                    {% elif booking.status == "completed" %}
+                                        <span class="status-completed">Completed</span>
                                     {% else %}
                                         <span class="status-active">Active</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if booking.status != "cancelled" %}
-                                        <button type="submit" name="booking_id" value="{{ booking.id }}">Cancel Booking</button>
-                                    {% endif %}
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                        <button type="submit">View Details</button>
+                                    </form>
                                 </td>
                             </tr>
                         {% endfor %}

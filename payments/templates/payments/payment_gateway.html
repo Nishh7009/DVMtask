@@ -99,14 +99,15 @@
     </style>
 </head>
 <body>
-    <div class="success-message">
-      {% if messages %}
-        {% for message in messages%}
-          <p>{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    </div>
+
     <div class="booking-summary">
+        {% if messages %}
+          <div class="success-message">
+          {% for message in messages%}
+            <p>{{ message }}</p>
+          {% endfor %}
+          </div>
+        {% endif %}
         <h1>Booking Summary</h1>
         <p><strong>From:</strong> {{ start_stop }}</p>
         <p><strong>To:</strong> {{ end_stop }}</p>

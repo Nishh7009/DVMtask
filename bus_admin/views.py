@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .forms import AddSchedule, ChangeSchedule
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from booking_system.models import Schedule
 from django.urls import reverse
+from datetime import datetime
+from booking_system.utils import create_weekly_schedules
 # Create your views here.
 
 
@@ -23,21 +26,27 @@ def add_schedule(request):
 @user_passes_test(lambda user: user.is_staff, login_url="/login/")
 def edit_schedule(request, schedule_id):
     schedule = Schedule.objects.get(pk=schedule_id)
-    if request.method == "POST":
-        form = ChangeSchedule(request.POST, instance=schedule)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Schedule updated successfully!")
-    else:
-        form = ChangeSchedule(instance=schedule)
+    if request.user.admin_of == schedule.bus:
+        if request.method == "POST":
+            form = ChangeSchedule(request.POST, instance=schedule)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Schedule updated successfully!")
+        else:
+            form = ChangeSchedule(instance=schedule)
 
-    return render(request, 'bus_admin/edit_schedule.html', {'form': form})
+        return render(request, 'bus_admin/edit_schedule.html', {'form': form})
+    elif request.user.admin_of != schedule.bus and schedule.departure_time > datetime.now():
+        return HttpResponse('You do not have permission to edit this schedule.')
+    elif schedule.departure_time < datetime.now():
+        return HttpResponse('Cannot edit past schedules.')
 
 
 @user_passes_test(lambda user: user.is_staff, login_url="/login/")
 def view_schedules(request):
     admin_of = request.user.admin_of
-    schedules = Schedule.objects.filter(bus=admin_of).order_by('pk')
+    schedules = Schedule.objects.filter(
+        bus=admin_of, departure_time__gte=datetime.now()).order_by('pk')
     entries = []
     for schedule in schedules:
         schedule_id = schedule.pk
@@ -56,5 +65,9 @@ def view_schedules(request):
             return redirect(reverse('edit_schedule', args=[int(request.POST.get('edit_schedule'))]))
         if request.POST.get('add_schedule'):
             return redirect(reverse('add_schedule'))
+        if request.POST.get('create_next_week_schedules'):
+            schedules_created = create_weekly_schedules(admin_of)
+            messages.success(
+                request, f"{schedules_created} schedules created successfully!")
 
     return render(request, 'bus_admin/view_schedules.html', {'entries': entries})

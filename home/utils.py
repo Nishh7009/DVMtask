@@ -1,43 +1,10 @@
 from booking_system.models import Schedule
-
-#
-# def find_buses(start_stop, end_stop, date):
-#     start_segments = RouteSegment.objects.filter(start_stop=start_stop)
-#
-#     buses = []
-#
-#     for start in start_segments:
-#
-#         end = RouteSegment.objects.filter(
-#             route=start.route, end_stop=end_stop).first()
-#
-#         if end and start.order < end.order:
-#             all_segments = RouteSegment.objects.filter(
-#                 route=start.route, order__gte=start, order__lte=end).order_by('order')
-#
-#             starting_schedules = Schedule.objects.filter(
-#                 route_segment=start, departure_time__date=date)
-#
-#             for schedule in starting_schedules:
-#
-#                 schedules = list(Schedule.objects.filter(
-#                     route_segment__in=all_segments, bus=schedule.bus).order_by('departure_time'))
-#
-#                 if len(schedules) == len(all_segments):
-#                     buses.append({
-#                         'bus': schedule.bus,
-#                         'schedules': schedules,
-#                         'start_time': schedules[0].departure_time,
-#                         'end_time': schedule[-1].arrival_time,
-#                         'price': sum(schedule.price for schedule in schedules)
-#                     })
-#
-#     return buses
+from datetime import datetime
 
 
 def find_buses(start_stop, end_stop, date):
     start_schedules = Schedule.objects.filter(
-        route_segment__start_stop=start_stop, departure_time__date=date, is_running=True)
+        route_segment__start_stop=start_stop, departure_time__date=date, is_running=True, departure_time__gte=datetime.now())
 
     buses = []
 

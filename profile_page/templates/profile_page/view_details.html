@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .cancel {
+            background-color: #dc3545;
+        }
+        .cancel:hover {
+            background-color: #c82333;
+        }
+        .edit {
+            background-color: #007bff;
+        }
+        .edit:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Booking Details</h2>
+        <p><strong>Booking Time:</strong> {{ booking_time }}</p>
+        <p><strong>User:</strong> {{ user }}</p>
+        <p><strong>Start Stop:</strong> {{ start_stop }}</p>
+        <p><strong>End Stop:</strong> {{ end_stop }}</p>
+        <p><strong>Departure Time:</strong> {{ departure_time }}</p>
+        <p><strong>Arrival Time:</strong> {{ arrival_time }}</p>
+        <p><strong>Status:</strong> {{ status }}</p>
+        <p><strong>Total Price:</strong> ₹{{ price }}</p>
+        
+        <h3>Passengers</h3>
+        <ul>
+            {% for passenger in passengers %}
+                <li>{{ passenger.first_name }} {{ passenger.last_name }} (Age: {{ passenger.age }})</li>
+            {% endfor %}
+        </ul>
+        
+        {% if status == "confirmed" or status == "pending" %}
+            <form method="POST">
+              {% csrf_token %}
+              <button type="submit" name="cancel" value="cancel">Cancel Booking</button> 
+            </form>
+            <a href="/profile/edit_passengers/{{ id }}" class="button edit">Edit Passenger Details</a>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -34,13 +34,12 @@ def payment(request):
 
     if request.method == "POST":
         try:
-            passenger_objects = []
+            passenger_objects = [Passenger(**passenger)
+                                 for passenger in passengers]
             schedule_objects = list(
                 Schedule.objects.filter(pk__in=schedule_ids))
 
-            for passenger in passengers:
-                passenger_object = Passenger.objects.create(**passenger)
-                passenger_objects.append(passenger_object)
+            Passenger.objects.bulk_create(passenger_objects)
 
             booking = Booking.objects.create(
                 user=request.user, start_stop=start_stop, end_stop=end_stop, departure_time=departure_time, arrival_time=arrival_time, status="confirmed", total_price=total_price)
@@ -48,7 +47,7 @@ def payment(request):
             booking.schedules.set(schedule_objects)
             booking.passengers.set(passenger_objects)
 
-            payment = Payment.objects.create(
+            Payment.objects.create(
                 user=request.user, booking=booking, amount=total_price)
 
             context['booking_confirmed'] = True
