@@ -1,4 +1,5 @@
 .env.dev
 token
-requirements.txt
+Pipfile
+Pipfile.lock
 data.json
