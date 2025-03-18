@@ -18,7 +18,7 @@ class ChangeSchedule(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        if instance.is_running:
+        if instance.is_weekly:
             convert_to_weekly(instance)
 
         if not instance.is_running:
