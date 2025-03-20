@@ -9,7 +9,7 @@ from django.contrib import messages
 @login_required(login_url="/login/")
 def book_bus(request):
 
-    ticket_count = request.session.get('ticket_count', 1)
+    ticket_count = request.session.get('ticket_count', 0)
 
     if request.method == "POST":
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import UserDetails, AddMoney
+from .forms import AddMoney
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from booking_system.models import Booking

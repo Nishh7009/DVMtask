@@ -12,13 +12,18 @@ def verify_otp_view(request):
     if not next:
         next = '/home/'
     if request.method == "POST":
-        user_otp = request.POST.get("otp")
-        if verify_otp(request.user.otp, user_otp):
-            request.user.is_verified = True
-            request.user.save()
-            return redirect(next)
-        else:
-            messages.error(request, "OTP is incorrect, Please try again.")
-            return redirect(request.path)
+        if request.POST.get('verify'):
+            user_otp = request.POST.get("otp")
+            if verify_otp(request.user.otp, user_otp):
+                request.user.is_verified = True
+                request.user.save()
+                return redirect(next)
+            else:
+                messages.error(request, "OTP is incorrect, Please try again.")
+                # return redirect(request.path)
+        elif request.POST.get('resend'):
+            generate_otp(request.user)
+            messages.success(
+                request, "OTP has been resent to your email address.")
 
     return render(request, 'EmailOtp/verify_otp_view.html')

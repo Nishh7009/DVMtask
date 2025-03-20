@@ -4,7 +4,7 @@ from datetime import datetime
 
 def find_buses(start_stop, end_stop, date):
     start_schedules = Schedule.objects.filter(
-        route_segment__start_stop=start_stop, departure_time__date=date, is_running=True, departure_time__gte=datetime.now())
+        route_segment__start_stop=start_stop, departure_time__date=date, is_running=True, departure_time__gte=datetime.now(), available_capacity__gte=1)
 
     buses = []
 
@@ -16,7 +16,7 @@ def find_buses(start_stop, end_stop, date):
         price = 0
         arrival_time = None
 
-        while current_schedule is not None:
+        while current_schedule is not None and current_schedule.available_capacity > 0:
             all_schedules.append(current_schedule.id)
             price += current_schedule.price
             arrival_time = current_schedule.arrival_time

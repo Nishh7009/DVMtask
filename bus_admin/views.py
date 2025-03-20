@@ -13,12 +13,14 @@ from booking_system.utils import create_weekly_schedules
 @user_passes_test(lambda user: user.is_staff, login_url="/login/")
 def add_schedule(request):
     if request.method == "POST":
-        form = AddSchedule(request.POST)
+        form = AddSchedule(request.POST, bus=request.user.admin_of)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.bus = request.user.admin_of
+            instance.save()
             messages.success(request, "Schedule added successfully!")
     else:
-        form = AddSchedule()
+        form = AddSchedule(bus=request.user.admin_of)
 
     return render(request, 'bus_admin/add_schedule.html', {'form': form})
 
@@ -28,7 +30,8 @@ def edit_schedule(request, schedule_id):
     schedule = Schedule.objects.get(pk=schedule_id)
     if request.user.admin_of == schedule.bus:
         if request.method == "POST":
-            form = ChangeSchedule(request.POST, instance=schedule)
+            form = ChangeSchedule(
+                request.POST, instance=schedule)
             if form.is_valid():
                 form.save()
                 messages.success(request, "Schedule updated successfully!")

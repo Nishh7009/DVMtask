@@ -56,9 +56,9 @@ class Schedule(models.Model):
             if self.route_segment.end_stop != self.next_schedule.route_segment.start_stop:
                 raise ValidationError(
                     {'next_schedule': "Next Schedule's start stop must be same as this Schedule's end stop."})
-            if self.arrival_time.date() != self.next_schedule.departure_time.date():
+            if self.departure_time > self.next_schedule.arrival_time:
                 raise ValidationError(
-                    {"next_schedule": "Next Schedule's departure date is not the same as current schedule's arrival date."})
+                    {"next_schedule": "Next Schedule's arrival time can't be before this schedule's departure time."})
             if self.available_capacity > self.bus.capacity:
                 raise ValidationError(
                     {"available_capacity": "Available capacity cannot be greater than maximum capaity of bus"})

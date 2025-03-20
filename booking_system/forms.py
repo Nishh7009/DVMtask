@@ -15,7 +15,7 @@ class BookingForm(forms.Form):
             pk__in=self.request.session['booking_data']['schedule_ids']).values_list('available_capacity', flat=True)))
 
         if available_capacity < ticket_count:
-            return forms.ValidationError("Not enough seats available.")
+            raise forms.ValidationError("Not enough seats available.")
 
         return cleaned_data
 

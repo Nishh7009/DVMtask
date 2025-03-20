@@ -5,12 +5,12 @@ from django.utils import timezone
 
 
 @transaction.atomic
-def convert_to_weekly(schedule):
+def toggle_weekly(schedule, weekly):
     schedule_to_convert = schedule
     while len(list(Schedule.objects.filter(next_schedule=schedule_to_convert))) > 0:
         schedule_to_convert = list(Schedule.objects.filter(
             next_schedule=schedule_to_convert))[0]
-    schedule_to_convert.is_weekly = True
+    schedule_to_convert.is_weekly = weekly
     schedule_to_convert.save()
 
 
